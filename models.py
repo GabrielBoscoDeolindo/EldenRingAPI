@@ -1,13 +1,11 @@
 from typing import Optional
-from pydantic import BaseModel
+from sqlmodel import SQLModel, Field
 
-
-class Boss(BaseModel):
-    id: Optional[int] = None
-    name: str
-    title: str
+class Boss(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str 
     location: str
-    drops: int
-    shardbearer: bool
-    
-     
+    photo: str
+
+def create_db_and_tables(engine):
+    SQLModel.metadata.create_all(engine)

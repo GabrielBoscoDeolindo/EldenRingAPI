@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "Agmena";
+    src: url('../fonts/Agmena\ Pro\ Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+body{
+    padding-left: 240px;
+    padding-right: 240px;
+    background-color: black;
+}
+
+.bosses{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+}
+
+.boss-box{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 400px;
+    align-items: center;
+    border: 1px solid #f9c043;
+}
+
+.boss-box img {
+    width: 100%;  
+    height: 100%; 
+    object-fit: cover; 
+}
+
+.titulo-boss{
+    color: #f9c043;
+    font-family: "Agmena";
+    text-transform: uppercase;
+    font-size: 20px;
+}
+
