@@ -1,9 +1,12 @@
 from fastapi import FastAPI, HTTPException, status, Depends, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from typing import List
+from typing import List, Optional
 from sqlmodel import Session, select, create_engine
 from models import Boss, create_db_and_tables
+from pydantic import BaseModel
+
+
 
 
 sqlite_file_name = "database.db"
@@ -51,6 +54,22 @@ async def get_boss(boss_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Não existe boss com o ID {boss_id}")
     return boss
 
+class BossUpdate(BaseModel):
+    name: Optional[str] = None
+    photo: Optional[str] = None
+    description: Optional[str] = None
+
+@app.patch("/{boss_id}", response_model=Boss)
+async def update_boss(boss_id: int, boss_update: BossUpdate, session: Session = Depends(get_session)):
+    boss = session.get(Boss, boss_id)
+    if not boss:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Não existe boss com o ID {boss_id}")
     
-
-
+    boss_data = boss_update.model_dump(exclude_unset=True)
+    for key, value in boss_data.items():
+        setattr(boss, key, value)
+    
+    session.add(boss)
+    session.commit()
+    session.refresh(boss)
+    return boss

@@ -7,12 +7,17 @@
     <link rel="stylesheet" href="../static/css/styles.css" />
   </head>
   <body>
-    <div class="bosses">
-    <div class=boss-box>
+    <div class="logo">
+      <img src="../static/images/eldenring.png" alt="">
+    </div>
+    <div class="pagina">
+    <div class=boss-solo>
       <p class="titulo-boss">{{ boss.name }}</p>
       <img src="{{ boss.photo }}" alt="{{ boss.name }}" />
-      <div class="boss-description">{{ boss.description }}</div>
     </div>
-    </div>
+    <div class="descricao-boss">
+  <p class="descricao">"{{boss.description}}"</p>
+</div>
+  </div>
   </body>
 </html>
