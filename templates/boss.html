@@ -7,19 +7,12 @@
     <link rel="stylesheet" href="../static/css/styles.css" />
   </head>
   <body>
-    <div class="logo">
-      <img src="../static/images/eldenring.png" alt="">
-    </div>
     <div class="bosses">
-    {% for boss in bosses %}
     <div class=boss-box>
       <p class="titulo-boss">{{ boss.name }}</p>
       <img src="{{ boss.photo }}" alt="{{ boss.name }}" />
-      <a href="{{boss.id}}">
       <div class="boss-description">{{ boss.description }}</div>
-    </a>
     </div>
-    {% endfor %}
     </div>
   </body>
 </html>

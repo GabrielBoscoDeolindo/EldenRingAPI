@@ -24,32 +24,33 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.get("/bosses", response_model=List[Boss])
+@app.get("/", response_model=List[Boss])
 async def get_bosses(request: Request, session: Session = Depends(get_session)):
     bosses = session.exec(select(Boss)).all()
     return templates.TemplateResponse("index.html", {"request": request, "bosses": bosses})
 
 
-@app.get("/bosses/{boss_id}", response_model=Boss)
-async def get_boss(boss_id: int, session: Session = Depends(get_session)):
+@app.get("/{boss_id}")
+async def get_boss(request: Request, boss_id: int, session: Session = Depends(get_session)):
     boss = session.get(Boss, boss_id)
     if not boss:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Não existe boss com o ID {boss_id}")
-    return boss
+    return templates.TemplateResponse("boss.html", {"request": request, "boss": boss})
 
-
-@app.post("/bosses", response_model=Boss)
+@app.post("/", response_model=Boss)
 async def create_boss(boss: Boss, session: Session = Depends(get_session)):
     session.add(boss)
     session.commit()
     session.refresh(boss)
     return boss
 
-@app.delete("/bosses/{boss_id}", response_model=Boss)
-async def delete_boss(boss_id: int, session: Session = Depends(get_session)):
+@app.get("/{boss_id}", response_model=Boss)
+async def get_boss(boss_id: int, session: Session = Depends(get_session)):
     boss = session.get(Boss, boss_id)
-    session.delete(boss)
-    session.commit()
+    if not boss:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Não existe boss com o ID {boss_id}")
+    return boss
+
     
 
 
