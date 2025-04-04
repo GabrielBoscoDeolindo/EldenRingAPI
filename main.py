@@ -47,13 +47,6 @@ async def create_boss(boss: Boss, session: Session = Depends(get_session)):
     session.refresh(boss)
     return boss
 
-@app.get("/{boss_id}", response_model=Boss)
-async def get_boss(boss_id: int, session: Session = Depends(get_session)):
-    boss = session.get(Boss, boss_id)
-    if not boss:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Não existe boss com o ID {boss_id}")
-    return boss
-
 class BossUpdate(BaseModel):
     name: Optional[str] = None
     photo: Optional[str] = None
@@ -70,6 +63,14 @@ async def update_boss(boss_id: int, boss_update: BossUpdate, session: Session = 
         setattr(boss, key, value)
     
     session.add(boss)
+    session.commit()
+    session.refresh(boss)
+    return boss
+
+@app.delete("/{boss_id}")
+async def delete_boss(boss: Boss, boss_id: int, session: Session = Depends(get_session)):
+    boss = session.get(Boss, boss_id)
+    session.delete(boss)
     session.commit()
     session.refresh(boss)
     return boss
